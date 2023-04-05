@@ -1,0 +1,6 @@
+name: ddev-vscode-devcontainer
+
+# List of files and directories that are copied into the global .ddev directory
+# DDEV environment variables can be interpolated into these filenames
+global_files:
+- commands/host/code

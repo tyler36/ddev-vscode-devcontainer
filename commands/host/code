@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#ddev-generated
+## Description: Open a VSCode to a DDEV container
+## Usage: code
+## Example: "ddev code" Open VSCode remote to project's web container
+## Example: "ddev code -d" VSCode remote to project's to project database container
+
+## Requires DEV Containers extention: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
+
+CODE_EXECUTABLE="code"
+
+case ${1:-} in
+-d | -db | --database)
+    CODE_CONTAINER="ddev-${DDEV_PROJECT}-db"
+    CODE_PATH=$HOME
+    ;;
+--) # End of all options.
+    ;;
+-?*)
+    printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
+    ;;
+*) # Default case
+    CODE_CONTAINER="ddev-${DDEV_PROJECT}-web"
+    CODE_PATH=/var/www/html
+    ;;
+esac
+
+if [[ ${CODE_CONTAINER+x} ]]; then
+    ${CODE_EXECUTABLE} --folder-uri "vscode-remote://attached-container+$(printf "%s" "${CODE_CONTAINER}" | xxd -p)${CODE_PATH}"
+fi
