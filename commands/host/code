@@ -27,5 +27,5 @@ case ${1:-} in
 esac
 
 if [[ ${CODE_CONTAINER+x} ]]; then
-    ${CODE_EXECUTABLE} --folder-uri "vscode-remote://attached-container+$(printf "%s" "${CODE_CONTAINER}" | xxd -p)${CODE_PATH}"
+    ${CODE_EXECUTABLE} --folder-uri "vscode-remote://attached-container+$(printf '%s' $CODE_CONTAINER | xxd -p)${CODE_PATH}"
 fi
