@@ -4,7 +4,7 @@
 ## Description: Open a VSCode to a DDEV container
 ## Usage: code
 ## Example: "ddev code" Open VSCode remote to project's web container
-## Example: "ddev code -d" VSCode remote to project's to project database container
+## Example: "ddev code -d" Open VSCode remote to project's database container
 
 ## Requires DEV Containers extention: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
 
