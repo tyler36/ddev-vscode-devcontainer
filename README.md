@@ -30,6 +30,14 @@ Please see the relevant home pages above for installation and setup instructions
 1. Open a terminal to an existing project.
 1. Install the `ddev-vscode-devcontainer` add-on:
 
+   For DDEV v1.23.5 or above run
+
+   ```shell
+   ddev add-on get tyler36/ddev-vscode-devcontainer
+   ```
+
+   For earlier versions of DDEV run
+
    ```shell
    ddev get tyler36/ddev-vscode-devcontainer
    ```
