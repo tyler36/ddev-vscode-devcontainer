@@ -4,3 +4,8 @@ name: ddev-vscode-devcontainer
 # DDEV environment variables can be interpolated into these filenames
 global_files:
 - commands/host/code
+
+# Version constraint for DDEV that will be validated against the running DDEV executable
+# and prevent add-on from being installed if it doesn't validate.
+# See https://github.com/Masterminds/semver#checking-version-constraints for constraint rules.
+ddev_version_constraint: '>= v1.24.3'
