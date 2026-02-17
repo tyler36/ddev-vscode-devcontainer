@@ -1,8 +1,12 @@
 name: tests
 on:
   pull_request:
+    paths-ignore:
+      - "**.md"
   push:
     branches: [ main ]
+    paths-ignore:
+      - "**.md"
 
   schedule:
   - cron: '25 08 * * *'
@@ -14,6 +18,10 @@ on:
         description: Debug with tmate
         required: false
         default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   actions: write
