@@ -14,6 +14,7 @@ case ${1:-} in
 -d | -db | --database)
     CODE_CONTAINER="ddev-${DDEV_PROJECT}-db"
     CODE_PATH=$HOME
+    SERVICE="db"
     ;;
 --) # End of all options.
     ;;
@@ -23,9 +24,33 @@ case ${1:-} in
 *) # Default case
     CODE_CONTAINER="ddev-${DDEV_PROJECT}-web"
     CODE_PATH=/var/www/html
+    SERVICE="web"
     ;;
 esac
 
 if [[ ${CODE_CONTAINER+x} ]]; then
+    # Start DDEV, if not running.
+    if [ $DDEV_PROJECT_STATUS != "running" ]; then
+        ddev start
+    fi
+    
+    # Remove DDEV's default .gitconfig file to allow DEV Containers extension to perform default behavior. https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials
+    if [ -e $HOME/.gitconfig ] && ddev exec --quiet --service $SERVICE command -v git > /dev/null 2>&1; then
+        ddev exec --quiet --service $SERVICE rm -f $HOME/.gitconfig
+    fi
+    
     ${CODE_EXECUTABLE} --folder-uri "vscode-remote://attached-container+$(printf "$CODE_CONTAINER" | od -A n -t x1 | sed 's/ *//g' | tr -d '\n')${CODE_PATH}"
+
+    # Wait for VSCode to finish copying .gitconfig and then re-add DDEV default configs.
+    if [ -e $HOME/.gitconfig ] && ddev exec --quiet --service $SERVICE command -v git > /dev/null 2>&1; then
+        COUNT=0
+        MAX_COUNT=5
+        until ddev exec --service $SERVICE "[ -e $HOME/.gitconfig ]" 2> /dev/null || [ $COUNT -gt $MAX_COUNT ]; do
+            ((COUNT=$COUNT+1))
+            sleep 1
+        done
+
+        ddev exec --service $SERVICE git config --global core.autocrlf input
+        ddev exec --service $SERVICE git config --global safe.directory "\*"
+    fi
 fi
