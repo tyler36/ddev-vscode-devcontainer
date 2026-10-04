@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 #ddev-generated #ddev-silent-no-warn
 ## Description: Open a VSCode to a DDEV container
@@ -57,21 +58,21 @@ if [[ ${CODE_CONTAINER+x} ]]; then
     fi
 
     # Remove DDEV's default .gitconfig file to allow DEV Containers extension to perform default behavior. https://code.visualstudio.com/remote/advancedcontainers/sharing-git-credentials
-    if [ -e "$HOME"/.gitconfig ] && ddev exec --quiet --service "$SERVICE" command -v git > /dev/null 2>&1; then
-        ddev exec --quiet --service "$SERVICE" rm -f "$HOME"/.gitconfig
+    if [ -e "${HOME}/.gitconfig" ] && ddev exec --quiet --service "$SERVICE" command -v git > /dev/null 2>&1; then
+        ddev exec --quiet --service "$SERVICE" rm -f "${HOME}/.gitconfig"
         DDEV_GITCONFIG_EXISTS=0
     else
         DDEV_GITCONFIG_EXISTS=1
     fi
 
-    ${CODE_EXECUTABLE} --folder-uri "vscode-remote://attached-container+$(printf "%s" "$CODE_CONTAINER" | od -A n -t x1 | sed 's/ *//g' | tr -d '\n')${CODE_PATH}"
+    "${CODE_EXECUTABLE}" --folder-uri "vscode-remote://attached-container+$(printf "%s" "$CODE_CONTAINER" | od -A n -t x1 | sed 's/ *//g' | tr -d '\n')${CODE_PATH}"
 
     # Wait for VSCode to finish copying .gitconfig and then re-add DDEV default configs.
-    if [ $DDEV_GITCONFIG_EXISTS -eq 0 ]; then
+    if [ "$DDEV_GITCONFIG_EXISTS" -eq 0 ]; then
         COUNT=0
         MAX_COUNT=5
         sleep 1
-        until ddev exec --service "$SERVICE" "[ -e $HOME/.gitconfig ]" 2> /dev/null || [ $COUNT -gt $MAX_COUNT ]; do
+        while [ "$COUNT" -lt "$MAX_COUNT" ] && ! ddev exec --service "$SERVICE" "[ -e ${HOME}/.gitconfig ]" 2> /dev/null; do
             COUNT=$((COUNT+1))
             sleep 1
         done
