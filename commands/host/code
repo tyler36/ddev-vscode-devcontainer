@@ -7,6 +7,7 @@
 ## Example: "ddev code -d" Open VSCode remote to project's database container
 
 ## Requires DEV Containers extension: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
+## This command is installed from https://github.com/tyler36/ddev-vscode-devcontainer.
 
 CODE_EXECUTABLE="code"
 
