@@ -9,24 +9,40 @@
 ## Requires DEV Containers extension: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers
 ## This command is installed from https://github.com/tyler36/ddev-vscode-devcontainer.
 
+usage() {
+    cat <<'EOF'
+Usage: ddev code [options]
+
+Open a VS Code remote session to a DDEV container. Defaults to 'web'.
+
+Options:
+  -d, -db, --database   Open the database container
+  -h, --help            Show this help message
+EOF
+}
+
 CODE_EXECUTABLE="code"
 
-case ${1:-} in
--d | -db | --database)
-    CODE_CONTAINER="ddev-${DDEV_PROJECT}-db"
-    CODE_PATH=$HOME
-    SERVICE="db"
-    ;;
---) # End of all options.
-    ;;
--?*)
-    printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
-    ;;
-*) # Default case
-    CODE_CONTAINER="ddev-${DDEV_PROJECT}-web"
-    CODE_PATH=/var/www/html
-    SERVICE="web"
-    ;;
+case "${1:-}" in
+    -h|--help)
+        usage
+        exit 0
+        ;;
+    -d|-db|--database)
+        CODE_CONTAINER="ddev-${DDEV_PROJECT}-db"
+        CODE_PATH="$HOME"
+        SERVICE="db"
+        ;;
+    --)
+        ;;
+    -?*)
+        printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
+        ;;
+    *)
+        CODE_CONTAINER="ddev-${DDEV_PROJECT}-web"
+        CODE_PATH=/var/www/html
+        SERVICE="web"
+        ;;
 esac
 
 if [[ ${CODE_CONTAINER+x} ]]; then
