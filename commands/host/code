@@ -23,6 +23,11 @@ EOF
 
 CODE_EXECUTABLE="code"
 
+if ! command -v "$CODE_EXECUTABLE" >/dev/null 2>&1; then
+    printf 'ERROR: VS Code CLI not found in PATH: %s\n' "$CODE_EXECUTABLE" >&2
+    exit 1
+fi
+
 case "${1:-}" in
     -h|--help)
         usage
