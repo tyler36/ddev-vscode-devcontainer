@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 #ddev-generated #ddev-silent-no-warn
 ## Description: Open a VSCode to a DDEV container
